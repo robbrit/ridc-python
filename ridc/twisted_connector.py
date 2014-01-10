@@ -25,14 +25,18 @@ THE SOFTWARE.
 import json
 from twisted.internet import reactor
 from twisted.internet.defer import Deferred
-from twisted.internet.protocol import Protocol, ClientCreator
+from twisted.internet.protocol import ClientCreator
+from twisted.protocols.basic import LineReceiver
+
+MaxMessageSize = 16 * 1024 * 1024   # Max 16MB documents
+LineDelimiter = "\n"
 
 
-class RidcProtocol(Protocol):
+class RidcProtocol(LineReceiver):
     def connectionMade(self):
         self.lastDeferred = None
 
-    def dataReceived(self, data):
+    def lineReceived(self, data):
         if self.lastDeferred:
             d = self.lastDeferred
             self.lastDeferred = None
@@ -41,6 +45,10 @@ class RidcProtocol(Protocol):
     def sendMessage(self, message, onFinish):
         self.lastDeferred = onFinish
         self.transport.write(str("%s\n" % message))
+
+
+RidcProtocol.delimiter = LineDelimiter
+RidcProtocol.MAX_LENGTH = MaxMessageSize
 
 
 class RidcTwisted(object):
