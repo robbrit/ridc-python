@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name='python-ridc',
-    version='0.2',
+    version='0.2.1',
     description='Python connector for Ridc',
     author='Rob Britton',
     author_email='rob@robbritton.com',
