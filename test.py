@@ -46,7 +46,7 @@ def do_all_the_things():
     db = RidcTwisted("localhost", 3001)
 
     last = None
-    times = 10000
+    times = 100
 
     # first stick 100 elements in
     for i in range(times):
@@ -72,6 +72,14 @@ def do_all_the_things():
     # fetch something
     res = yield db.find_by_id(last["id"])
     print res
+
+    # update it
+    print "doing a put"
+    res["watup"] = 10
+    yield db.save(res)
+
+    res2 = yield db.find_by_id(last["id"])
+    print res2
 
     print "Getting by index:"
     res = yield db.find("field", "8")

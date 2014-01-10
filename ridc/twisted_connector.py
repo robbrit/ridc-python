@@ -95,6 +95,15 @@ class RidcTwisted(object):
         ''' Create a new document. '''
         return self._send_message("POST %s" % json.dumps(document))
 
+    def save(self, document):
+        ''' Save an existing document. '''
+        id = document.get("id")
+
+        if id:
+            return self._send_message("PUT /%s %s" % (id, json.dumps(document)))
+
+        return self.create(document)
+
     def delete(self, id):
         ''' Delete something by ID '''
         return self._send_message("DELETE /%s" % id)
